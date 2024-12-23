@@ -7,10 +7,10 @@ public class Game {
     private static final String[] COLORS = { "Red", "Blue", "Green", "Yellow", "White" };
     private static final int[][][] SHAPES = {
             { { 1, 1, 1 }, { 1, 0, 0 } }, // L-shape
-            { { 1, 1, 1, 1 } }, // Line
-            { { 1, 1 }, { 1, 1 } }, // Square
+            { { 1, 1, 1, 1 } },           // Line
+            { { 1, 1 }, { 1, 1 } },       // Square
             { { 0, 1, 1 }, { 1, 1, 0 } }, // Z-shape
-            { { 1, 1, 0 }, { 0, 1, 1 } } // S-shape
+            { { 1, 1, 0 }, { 0, 1, 1 } }  // S-shape
     };
 
     public Game(Player player) {
@@ -23,51 +23,59 @@ public class Game {
 
         System.out.println("Game started!");
 
-        while (player.isInGame()) {
+        while (player.getSheet().hasSpace()) {
             System.out.println("\n" + player.getName() + "'s Turn!");
+            System.out.println("Bombs Remaining: " + player.getBombs());
+            System.out.println("Energy: " + player.getEnergy());
 
-            // Generate random block
             Block block = generateBlock();
             System.out.println("Generated Block (Color: " + block.getColor() + "):");
             block.printShape();
 
-            // Show the current board
             System.out.println("\nCurrent Board:");
             player.getSheet().printSheet();
 
-            System.out.println("Enter the column (0-9) to place the block:");
-            int column = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            System.out.println("Enter the column (0-9) to place the block, 'r' to rotate (cost: 1 energy), or 'b' to use a bomb:");
 
-            boolean placed = player.getSheet().placeBlock(block, column);
-            if (!placed) {
-                if (blockGoesOutOfBounds(column, block)) {
-                    System.out.println("Block placement failed due to column boundaries! Try again.");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("b")) {
+                if (player.hasBombs()) {
+                    player.useBomb();
+                    System.out.println("You used a bomb to skip this block!");
                     continue;
                 } else {
-                    System.out.println("Block placement failed due to row boundaries! Game over.");
-                    break;
+                    System.out.println("You have no bombs left!");
+                }
+            } else if (input.equalsIgnoreCase("r")) {
+                if (player.hasEnoughEnergy(1)) {
+                    block.rotate();
+                    player.useEnergy(1);
+                } else {
+                    System.out.println("Not enough energy to rotate the block!");
+                }
+            } else {
+                try {
+                    int column = Integer.parseInt(input);
+                    boolean placed = player.getSheet().placeBlock(block, column);
+                    if (placed) {
+                        player.addEnergy(1);
+                    } else {
+                        System.out.println("Block placement failed. Game over.");
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Try again.");
                 }
             }
-
-            // Show the updated board
-            System.out.println("\nUpdated Board:");
-            player.getSheet().printSheet();
         }
 
         System.out.println("\nGame Over! Final score: " + player.getSheet().calculateScore());
-        scanner.close();
     }
 
     private Block generateBlock() {
         int shapeIndex = random.nextInt(SHAPES.length);
         String color = COLORS[random.nextInt(COLORS.length)];
-        int[][] shape = SHAPES[shapeIndex];
-        return new Block(color, shape);
-    }
-
-    private boolean blockGoesOutOfBounds(int column, Block block) {
-        int[][] shape = block.getShape();
-        return column < 0 || column + shape[0].length > 10; // Check column boundaries
+        return new Block(color, SHAPES[shapeIndex]);
     }
 }

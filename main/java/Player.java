@@ -1,12 +1,14 @@
 public class Player {
     private String name;
-    private Sheet sheet;
-    private int bombsLeft;
+    private Sheet sheet;  // The player's game board
+    private int bombs;    // Bombs available to skip blocks
+    private int energy;   // Energy available for rotating blocks
 
     public Player(String name) {
         this.name = name;
         this.sheet = new Sheet();
-        this.bombsLeft = 3; // Player starts with 3 bombs
+        this.bombs = 3; // Start with 3 bombs
+        this.energy = 0; // Start with 0 energy
     }
 
     public String getName() {
@@ -17,20 +19,35 @@ public class Player {
         return sheet;
     }
 
-    public int getBombsLeft() {
-        return bombsLeft;
+    public int getBombs() {
+        return bombs;
     }
 
     public void useBomb() {
-        if (bombsLeft > 0) {
-            bombsLeft--;
-            System.out.println("Bomb used! Remaining bombs: " + bombsLeft);
-        } else {
-            System.out.println("No bombs left!");
+        if (bombs > 0) {
+            bombs--;
         }
     }
 
-    public boolean isInGame() {
-        return bombsLeft > 0 || sheet.hasSpace();
+    public boolean hasBombs() {
+        return bombs > 0;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void addEnergy(int amount) {
+        energy += amount;
+    }
+
+    public void useEnergy(int amount) {
+        if (amount <= energy) {
+            energy -= amount;
+        }
+    }
+
+    public boolean hasEnoughEnergy(int amount) {
+        return energy >= amount;
     }
 }

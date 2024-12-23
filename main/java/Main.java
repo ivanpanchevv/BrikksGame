@@ -1,10 +1,10 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Welcome to the Single-Player Brikks Game!");
-
-        Player player = new Player("Player 1");
-        Game game = new Game(player);
-
-        game.start();
+        Scanner scanner = new Scanner(System.in); // Create a shared Scanner instance
+        Menu menu = new Menu(scanner); // Pass the Scanner to the Menu
+        menu.displayMenu(); // Display the menu once
+        scanner.close(); // Close the Scanner after the program finishes
     }
 }
