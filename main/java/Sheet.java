@@ -27,6 +27,10 @@ public class Sheet {
         // Place the block on the grid
         markBlock(shape, bottomRow, column, color);
         score += 5; // Add points for successfully placing the block
+
+        // Clear full rows and update the score
+        clearFullRows();
+
         return true;
     }
 
@@ -65,7 +69,57 @@ public class Sheet {
         }
     }
 
+    /**
+     * Clears all rows that are full and shifts rows above down.
+     */
+    private void clearFullRows() {
+        int rowsCleared = 0;
 
+        for (int row = 0; row < grid.length; row++) {
+            if (isRowFull(row)) {
+                clearRow(row); // Clear the row
+                shiftRowsDown(row); // Shift rows above down
+                rowsCleared++;
+            }
+        }
+
+        // Update score based on the number of rows cleared
+        if (rowsCleared > 0) {
+            score += rowsCleared * 10; // 10 points per cleared row
+            System.out.println(rowsCleared + " row(s) cleared! Score: " + score);
+        }
+    }
+
+    /**
+     * Checks if a row is full.
+     */
+    private boolean isRowFull(int row) {
+        for (int col = 0; col < grid[row].length; col++) {
+            if (grid[row][col] == null) {
+                return false; // Row is not full
+            }
+        }
+        return true; // Row is full
+    }
+
+    /**
+     * Clears a specific row by setting all its cells to null.
+     */
+    private void clearRow(int row) {
+        for (int col = 0; col < grid[row].length; col++) {
+            grid[row][col] = null;
+        }
+    }
+
+    /**
+     * Shifts all rows above the given row down by one position.
+     */
+    private void shiftRowsDown(int startRow) {
+        for (int row = startRow; row > 0; row--) {
+            grid[row] = grid[row - 1]; // Move the row above down
+        }
+        grid[0] = new String[grid[0].length]; // Clear the top row
+    }
 
     public void printSheet() {
         System.out.println("Current Board:");
@@ -127,5 +181,4 @@ public class Sheet {
                 return ANSI.RESET;
         }
     }
-
 }
