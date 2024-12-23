@@ -20,9 +20,9 @@ public class Block {
         for (int[] row : shape) {
             for (int cell : row) {
                 if (cell == 1) {
-                    System.out.print(colorCode + "■ " + ANSI.RESET);
+                    System.out.print(colorCode + " ■ " + ANSI.RESET);
                 } else {
-                    System.out.print(". ");
+                    System.out.print(" . ");
                 }
             }
             System.out.println();

@@ -28,50 +28,61 @@ public class Game {
             System.out.println("Bombs Remaining: " + player.getBombs());
             System.out.println("Energy: " + player.getEnergy());
 
+            // Generate a random block
             Block block = generateBlock();
             System.out.println("Generated Block (Color: " + block.getColor() + "):");
             block.printShape();
 
+            // Display the current board
             System.out.println("\nCurrent Board:");
             player.getSheet().printSheet();
 
-            System.out.println("Enter the column (0-9) to place the block, 'r' to rotate (cost: 1 energy), or 'b' to use a bomb:");
+            boolean blockPlaced = false; // Track whether the block is placed
 
-            String input = scanner.nextLine().trim();
+            while (!blockPlaced) {
+                System.out.println("Enter the column (0-9) to place the block, 'r' to rotate (cost: 1 energy), or 'b' to use a bomb:");
 
-            if (input.equalsIgnoreCase("b")) {
-                if (player.hasBombs()) {
-                    player.useBomb();
-                    System.out.println("You used a bomb to skip this block!");
-                    continue;
-                } else {
-                    System.out.println("You have no bombs left!");
-                }
-            } else if (input.equalsIgnoreCase("r")) {
-                if (player.hasEnoughEnergy(1)) {
-                    block.rotate();
-                    player.useEnergy(1);
-                } else {
-                    System.out.println("Not enough energy to rotate the block!");
-                }
-            } else {
-                try {
-                    int column = Integer.parseInt(input);
-                    boolean placed = player.getSheet().placeBlock(block, column);
-                    if (placed) {
-                        player.addEnergy(1);
+                String input = scanner.nextLine().trim(); // Read player input
+
+                if (input.equalsIgnoreCase("b")) { // Use a bomb
+                    if (player.hasBombs()) {
+                        player.useBomb();
+                        System.out.println("You used a bomb to skip this block!");
+                        break; // Skip to the next block
                     } else {
-                        System.out.println("Block placement failed. Game over.");
-                        break;
+                        System.out.println("You have no bombs left!");
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Try again.");
+                } else if (input.equalsIgnoreCase("r")) { // Rotate the block
+                    if (player.hasEnoughEnergy(1)) {
+                        player.useEnergy(1);
+                        block.rotate();
+                    } else {
+                        System.out.println("Not enough energy to rotate the block!");
+                    }
+                } else { // Attempt to place the block
+                    try {
+                        int column = Integer.parseInt(input);
+                        blockPlaced = player.getSheet().placeBlock(block, column);
+                        if (blockPlaced) {
+                            player.addEnergy(1); // Gain energy for placing the block
+                        } else {
+                            System.out.println("Invalid placement! Try again.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid column (0-9), 'r' to rotate, or 'b' to use a bomb.");
+                    }
                 }
+            }
+
+            // If the player skipped the block using a bomb, continue to the next turn
+            if (!blockPlaced) {
+                continue;
             }
         }
 
         System.out.println("\nGame Over! Final score: " + player.getSheet().calculateScore());
     }
+
 
     private Block generateBlock() {
         int shapeIndex = random.nextInt(SHAPES.length);
