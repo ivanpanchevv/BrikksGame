@@ -59,7 +59,7 @@ public class Sheet {
             for (int j = 0; j < shape[i].length; j++) {
                 if (shape[i][j] == 1) {
                     // Add colorful block with ANSI codes and proper alignment
-                    grid[row + i][column + j] = getColorCode(color) + "■" + ANSI.RESET;
+                    grid[row + i][column + j] = getColorCode(color) + "■  " + ANSI.RESET;
                 }
             }
         }
