@@ -1,14 +1,14 @@
 public class Player {
     private String name;
-    private Sheet sheet;  // The player's game board
-    private int bombs;    // Bombs available to skip blocks
-    private int energy;   // Energy available for rotating blocks
+    private Sheet sheet;
+    private int bombs;
+    private int energy;
 
     public Player(String name) {
         this.name = name;
         this.sheet = new Sheet();
-        this.bombs = 3; // Start with 3 bombs
-        this.energy = 0; // Start with 0 energy
+        this.bombs = 3;
+        this.energy = 0;
     }
 
     public String getName() {
@@ -51,3 +51,4 @@ public class Player {
         return energy >= amount;
     }
 }
+
