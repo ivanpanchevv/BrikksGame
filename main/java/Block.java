@@ -1,5 +1,3 @@
-Blocks
-
 public class Block {
     private String color;
     private int[][] shape;
