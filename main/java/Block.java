@@ -1,6 +1,8 @@
+Blocks
+
 public class Block {
-    private String color; // The color of the block
-    private int[][] shape; // The shape of the block
+    private String color;
+    private int[][] shape;
 
     public Block(String color, int[][] shape) {
         this.color = color;
@@ -20,7 +22,7 @@ public class Block {
         for (int[] row : shape) {
             for (int cell : row) {
                 if (cell == 1) {
-                    System.out.print(colorCode + " ■ " + ANSI.RESET);
+                    System.out.print(colorCode + " ■ " + Colors.RESET);
                 } else {
                     System.out.print(" . ");
                 }
@@ -32,17 +34,17 @@ public class Block {
     public String getColorCode() {
         switch (color.toLowerCase()) {
             case "red":
-                return ANSI.RED;
+                return Colors.RED;
             case "blue":
-                return ANSI.BLUE;
+                return Colors.BLUE;
             case "green":
-                return ANSI.GREEN;
+                return Colors.GREEN;
             case "yellow":
-                return ANSI.YELLOW;
+                return Colors.YELLOW;
             case "white":
-                return ANSI.WHITE;
+                return Colors.WHITE;
             default:
-                return ANSI.RESET;
+                return Colors.RESET;
         }
     }
 
@@ -62,3 +64,4 @@ public class Block {
         printShape();
     }
 }
+
