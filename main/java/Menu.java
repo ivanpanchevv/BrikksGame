@@ -1,47 +1,52 @@
 import java.util.Scanner;
 
 public class Menu {
-    private Scanner scanner; // Shared Scanner instance
+    private Scanner scanner; //
 
     public Menu(Scanner scanner) {
-        this.scanner = scanner; // Pass the shared Scanner
+        this.scanner = scanner;
     }
 
     public void displayMenu() {
-        System.out.println("\n=== Brikks Game Menu ===");
-        System.out.println("1. Start New Game");
-        System.out.println("2. View Instructions");
-        System.out.println("3. Exit");
-        System.out.print("Enter your choice: ");
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
 
-        int choice;
-        try {
-            choice = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number between 1 and 3.");
-            return; // Exit since the game is only played once
+        while (running) {
+            System.out.println("Main Menu:");
+            System.out.println("1. Start Game");
+            System.out.println("2. View Instructions");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1":
+                    startNewGame();
+                    break;
+                case "2":
+                    viewInstructions();
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine();
+                    break;
+                case "3":
+                    System.out.println("Exiting the game. Goodbye!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
         }
 
-        switch (choice) {
-            case 1:
-                startNewGame();
-                break;
-            case 2:
-                viewInstructions();
-                break;
-            case 3:
-                System.out.println("Exiting the game. Goodbye!");
-                break;
-            default:
-                System.out.println("Invalid choice. Please select a valid option.");
-        }
+        scanner.close();
     }
+
 
     private void startNewGame() {
         System.out.println("\nStarting a new game...");
-        Player player = new Player("Player 1");
+        Player player = new Player("Player");
         Game game = new Game(player);
-        game.start(); // Start the game
+        game.start();
     }
 
     private void viewInstructions() {
@@ -53,7 +58,7 @@ public class Menu {
         System.out.println("5. You can skip blocks by using bombs (up to 3 per game).");
         System.out.println("6. Points are scored for successfully placed blocks.");
         System.out.println("7. The goal is to place as many blocks as possible and score the highest points!");
-        System.out.println("\nPress Enter to exit.");
-        scanner.nextLine(); // Wait for the user to press Enter
+
     }
 }
+
